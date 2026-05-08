@@ -1,15 +1,28 @@
 import google.generativeai as genai
 
-# This links your code to the AI "engine"
-genai.configure(api_key="YOUR_API_KEY_HERE")
+# 1. Configuration - Replace the text below with your actual API key
+API_KEY = "YOUR_API_KEY_HERE"
+genai.configure(api_key=API_KEY)
 
-# Selecting the model (the 'brain')
+# 2. Initialize the Model (The 'Brain')
+# We define this globally so app.py can import it easily
 model = genai.GenerativeModel('gemini-1.5-flash')
 
-# The function that makes it work
+# 3. Terminal function (for testing without the website)
 def start_ai():
-    user_input = input("Ask your AI something: ")
-    response = model.generate_content(user_input)
-    print(f"AI Response: {response.text}")
+    print("--- AI Terminal Mode Active ---")
+    while True:
+        user_input = input("You: ")
+        if user_input.lower() in ['exit', 'quit']:
+            break
+        
+        try:
+            response = model.generate_content(user_input)
+            print(f"AI: {response.text}")
+        except Exception as e:
+            print(f"Error: {e}")
 
-start_ai()
+# 4. Safety Block
+# This prevents the terminal mode from starting when app.py imports this file
+if __name__ == "__main__":
+    start_ai()
